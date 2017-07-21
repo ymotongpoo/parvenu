@@ -1,7 +1,9 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
 from time import sleep
+
+from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException:
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select, WebDriverWait
 
 
 class SBIHandler:
@@ -14,6 +16,10 @@ class SBIHandler:
     def fetch_all(self):
         result = []
 
+        select = Select(self.browser.find_element_by_id('pageRowsInput'))
+        select.select_by_value('100')
+        sleep(2)
+
         elems = self.browser.find_elements_by_class_name("fundDetail")
         for e in elems:
             result.append(
@@ -24,23 +30,22 @@ class SBIHandler:
             )
 
         while(True):
-            pager = self.browser.find_element_by_link_text('次へ→')
-            if pager is None:
+            try:
+                pager = self.browser.find_element_by_link_text('次へ→')
+                pager.click()
+                sleep(5)
+
+                elems = self.browser.find_elements_by_class_name('fundDetail')
+                for e in elems:
+                    result.append(
+                        {
+                            'url': e.get_attribute('href'),
+                            'name': e.text,
+                        }
+                    )
+            except NoSuchElementException:
                 break;
-            pager.click()
 
-            # marker = WebDriverWait(self.browser, 3).until(lambda x: x.find_element_by_class_name('md-l-table-01-fund'))
-            # marker = WebDriverWait(self.browser, 5)
-            sleep(5)
-
-            elems = self.browser.find_elements_by_class_name('fundDetail')
-            for e in elems:
-                result.append(
-                    {
-                        'url': e.get_attribute('href'),
-                        'name': e.text,
-                    }
-                )
 
         return result
 
