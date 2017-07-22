@@ -42,7 +42,7 @@ class SBIHandler(InvestmentTrustSiteHandler):
             result.append(
                 {
                     'url': e.get_attribute('href'),
-                    'name': e.text,
+                    'name': e.text.strip(),
                 }
             )
 
@@ -57,7 +57,7 @@ class SBIHandler(InvestmentTrustSiteHandler):
                     result.append(
                         {
                             'url': e.get_attribute('href'),
-                            'name': e.text,
+                            'name': e.text.strip(),
                         }
                     )
             except NoSuchElementException:
@@ -78,14 +78,14 @@ class SBIHandler(InvestmentTrustSiteHandler):
         result = {}
         
         elems = self.browser.find_elements_by_tag_name('h3')
-        name = elems[0].text               # 商品名
+        name = elems[0].text.strip()           # 商品名
 
         elems = self.browser.find_elements_by_css_selector('.floatL .fl01')
         morning_star_category = elems[3].text  # モーニングスターカテゴリ
 
         elems = self.browser.find_elements_by_css_selector('table.md-l-table-01.has_tooltip.col1.md-l-utl-mt10')
         elems = elems[0].find_elements_by_tag_name('tr')
-        strategy = elems[1].text            # 運用方針
+        strategy = elems[1].text.strip()    # 運用方針
         benchmark = elems[3].text           # ベンチマーク
         category = elems[5].text            # 商品分類
         association_code = elems[7].text    # 協会コード

@@ -20,6 +20,10 @@ from selenium import webdriver
 class InvestmentTrustSiteHandler(object):
     """ InvestmentTrustSiteHandler is a class to provide minimum functions
     for invest trust site
+
+    Attributes:
+    :param browser webdriver.WebDriver: WebDriver instance
+    :param data dict: data storage
     """
     def __init__(self, url):
         self.browser = webdriver.Chrome()
@@ -29,4 +33,4 @@ class InvestmentTrustSiteHandler(object):
     def close(self):
         """ close closes WebDriver instance
         """
-        self.driver.close()
+        self.browser.close()
