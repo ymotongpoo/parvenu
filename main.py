@@ -12,6 +12,8 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+import pickle
+
 from csv import DictWriter
 from time import sleep
 
@@ -23,7 +25,7 @@ def dump(filepath, data):
     :param data list: list of dict data
     """
     with open(filepath, 'w') as f:
-        writer = DictWriter(f, fieldnames=data.keys())
+        writer = DictWriter(f, fieldnames=data[0].keys())
         writer.writeheader()
         writer.writerows(data)
 
@@ -37,7 +39,8 @@ def main():
             result = handler.open_and_fetch_detail(i['url'])
             results.append(result)
             sleep(3)
-
+        with open("sbi.pickle", mode="wb") as p:
+            pickle.dump(results, p)
         dump("sbi.csv", results)          
     except AttributeError as e:
         raise e
