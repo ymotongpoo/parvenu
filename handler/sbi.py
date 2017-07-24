@@ -61,7 +61,7 @@ class SBIHandler(InvestmentTrustSiteHandler):
                         }
                     )
             except NoSuchElementException:
-                break;
+                break
 
         return result
 

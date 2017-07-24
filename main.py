@@ -18,6 +18,7 @@ from csv import DictWriter
 from time import sleep
 
 from handler.sbi import SBIHandler
+from handler.rakuten import RakutenHandler
 
 def dump(filepath, data):
     """ dump write down all data into filepath as csv
@@ -30,7 +31,7 @@ def dump(filepath, data):
         writer.writerows(data)
 
 
-def main():
+def sbi():
     handler = SBIHandler()
     try:
         all_items = handler.fetch_all()
@@ -49,6 +50,20 @@ def main():
     finally:
         handler.close()
 
+
+def rakuten():
+    handler = RakutenHandler()
+    try:
+        all_items = handler.fetch_all()
+        with open("rakuten.pickle", mode="wb") as p:
+            pickle.dump(all_items, p)
+    except TypeError as e:
+        raise e
+    finally:
+        handler.close()
+
+def main():
+    rakuten()
 
 if __name__ == '__main__':
     main()
