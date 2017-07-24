@@ -47,7 +47,7 @@ class RakutenHandler(InvestmentTrustSiteHandler):
 
         parsed = urlparse(self.browser.current_url)
         query = parse_qs(parsed.query)
-        page_num = int(query['pg'][0])        
+        page_num = int(query['pg'][0])
 
         while(True):
             try:
@@ -74,5 +74,29 @@ class RakutenHandler(InvestmentTrustSiteHandler):
                     )
             except NoSuchElementException:
                 break
-        
+
         return result
+
+    def open_and_fetch_detail(self, url):
+        self.browser.get(url)
+        sleep(1)
+        result = {}
+
+        elem = self.browser.find_element_by_css_selector('h1.fund-name')
+        name = elem.text.strip()                    # 商品名
+
+        tables = self.browser.find_elements_by_css_selector('table.tbl-data-01')
+        elems = tables[1].find_elements_by_tag_name('td')
+        investment_manager = elems[0].text.strip()  # 運用会社
+        net_asset = elems[1].text.strip()           # 純資産
+        category = elems[2].text.strip()            # 楽天証券カテゴリ
+
+
+        return {
+            'name': name,
+            'investment_manager': investment_manager,
+            'category': category,
+            'net_asset': net_asset,
+        }
+
+
