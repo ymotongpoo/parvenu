@@ -85,18 +85,37 @@ class RakutenHandler(InvestmentTrustSiteHandler):
         elem = self.browser.find_element_by_css_selector('h1.fund-name')
         name = elem.text.strip()                    # 商品名
 
+        elem = self.browser.find_element_by_css_selector('div.segment.nb2 p')
+        strategy = elem.text.strip()                # 運用方針
+
         tables = self.browser.find_elements_by_css_selector('table.tbl-data-01')
         elems = tables[1].find_elements_by_tag_name('td')
         investment_manager = elems[0].text.strip()  # 運用会社
         net_asset = elems[1].text.strip()           # 純資産
         category = elems[2].text.strip()            # 楽天証券カテゴリ
 
+        elems = tables[2].find_elements_by_tag_name('td')
+        start_date = elems[0].text.strip()          # 設定日
+        redemption_date = elems[1].text.strip()     # 償還日
+        closing_date = elems[3].text.strip()        # 決算日
+        custodian_fee = elems[15].text.strip()      # 信託報酬
+        assets_retained = elems[21].text.strip()    # 信託財産留保額
+
+        elem = self.browser.find_element_by_css_selector('li.commission td')
+        buying_commision = elem.text.strip()
 
         return {
             'name': name,
-            'investment_manager': investment_manager,
+            'url': url,
+            'strategy': strategy,
             'category': category,
+            'buying_commision': buying_commision
+            'custodian_fee': custodian_fee,
+            'assets_retained': assets_retained,
+            'start_date': start_date,
+            'closing_date': closing_date,
+            'redemption_date': redemption_date,
+            'investment_manager': investment_manager,
             'net_asset': net_asset,
         }
-
 

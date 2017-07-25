@@ -13,9 +13,10 @@
 #    limitations under the License.
 
 import pickle
-
 from csv import DictWriter
 from time import sleep
+
+from tqdm import tqdm
 
 from handler.sbi import SBIHandler
 from handler.rakuten import RakutenHandler
@@ -36,13 +37,13 @@ def sbi():
     try:
         all_items = handler.fetch_all()
         results = []
-        for i in all_items:
+        for i in tqdm(all_items):
             result = handler.open_and_fetch_detail(i['url'])
             results.append(result)
             sleep(3)
         with open("sbi.pickle", mode="wb") as p:
             pickle.dump(results, p)
-        dump("sbi.csv", results)          
+        dump("sbi.csv", results)
     except AttributeError as e:
         raise e
     except IndexError as e:
@@ -55,8 +56,15 @@ def rakuten():
     handler = RakutenHandler()
     try:
         all_items = handler.fetch_all()
-        with open("rakuten.pickle", mode="wb") as p:
-            pickle.dump(all_items, p)
+        results = []
+        for i in tqdm(all_items):
+            result = handler.open_and_fetch_detail(i['url'])
+            results.append(result)
+            sleep(3)
+        with open("rakuten.pickle", mode='wb') as p:
+            pickle.dump(results, p)
+        dump("rakuten.csv", results)
+
     except TypeError as e:
         raise e
     finally:
